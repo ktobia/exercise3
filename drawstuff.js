@@ -307,11 +307,14 @@ function interpRect(imagedata,top,bottom,left,right,globals,tlAttribs,trAttribs,
         lVect = Vector.subtract(lVect,worldLoc);
         lVect = Vector.normalize(lVect);
         var NdotL = Vector.dot(lVect,new Vector(0,0,1)); // rect in xy plane
-        
-        // calc diffuse color
-        difColor.r = attribs.diffuse.r * globals.lightCol.r/255 * NdotL;
-        difColor.g = attribs.diffuse.g * globals.lightCol.g/255 * NdotL;
-        difColor.b = attribs.diffuse.b * globals.lightCol.b/255 * NdotL;
+        NdotL = Math.max(0, NdotL);
+
+        var ambient = 0.2;
+
+        // calc diffuse + ambient color
+        difColor.r = attribs.diffuse.r * (ambient + (1 - ambient) * globals.lightCol.r/255 * NdotL);
+        difColor.g = attribs.diffuse.g * (ambient + (1 - ambient) * globals.lightCol.g/255 * NdotL);
+        difColor.b = attribs.diffuse.b * (ambient + (1 - ambient) * globals.lightCol.b/255 * NdotL);
         
         drawPixel(imagedata,pixX,pixY,difColor);
     } // end shade pixel
